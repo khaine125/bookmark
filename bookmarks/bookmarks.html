@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bookmarks</title>
+		<meta charset="UTF-8"/>
+		<meta http-equiv="Expires" content="0"/>
+		<meta http-equiv="pragma" content="no-cache"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<script src="./javascript/require.js"></script>
+		<link rel="stylesheet" href="./css/bookmarks.css"/>
+	</head>
+	<body>
+		<div id="editorToolbar">
+			<ul>
+				<li>EMC Documentum Content Server System Object Reference</li>
+			</ul>
+			<ul>
+				<li>Preface</li>
+				<ul>
+					<li>Preface 1</li>
+					<li>Preface 2</li>
+					<ul>
+						<li>Audience</li>
+						<li>Conversation</li>
+					</ul>
+				</ul>
+			</ul>
+			<ul>
+				<li>Intended audience</li>
+			</ul>
+			<ul>
+				<li>Typographical conventions</li>
+			</ul>
+			<ul>
+				<li>Revision history</li>
+			</ul>
+		</div>
+		<div id="bookmarks">
+			
+		</div>
+		<script>
+			require.config({
+				baseUrl: './javascript',
+				waitSeconds: 0
+			});
+			
+			document.addEventListener('DOMContentLoaded', function() {
+				require(['bookmarks'], function(bookmarks) {
+					var callMe = function(json) {
+						var bookmarksData = {},
+							parsed = JSON.parse(json);
+						debugger;
+						bookmarksData.configData = parsed;
+						bookmarksData.destination = document.getElementById('bookmarks');
+						bookmarks.init(bookmarksData);
+						//console.log(parsed);
+					};
+					
+					var request = new XMLHttpRequest();
+					request.overrideMimeType('application/json');
+					request.open('GET', 'http://127.0.0.1:8080/bookmarks.json', true);
+					
+					request.onreadystatechange = function() {
+						if (request.readyState === 4 && request.status === 200) {
+							callMe(request.responseText);
+						}
+					};
+					
+					request.send(null);
+				});
+			});
+		</script>
+	</body>
+</html>
