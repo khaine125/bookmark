@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bookmarks</title>
+		<meta charset="UTF-8"/>
+		<meta http-equiv="Expires" content="0"/>
+		<meta http-equiv="pragma" content="no-cache"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<script src="./javascript/require.js"></script>
+		<link rel="stylesheet" href="./css/bookmarks.css"/>
+		<style>
+			ul, #myUL {
+				list-style-type: none;
+			}
+
+			#myUL {
+				margin: 0;
+				padding: 0;
+			}
+
+			.caret {
+				cursor: pointer;
+				-webkit-user-select: none; /* Safari 3.1+ */
+				-moz-user-select: none; /* Firefox 2+ */
+				-ms-user-select: none; /* IE 10+ */
+				user-select: none;
+			}
+
+			.caret::before {
+				content: "\25B6";
+				color: black;
+				display: inline-block;
+				margin-right: 6px;
+			}
+
+			.caret-down::before {
+				-ms-transform: rotate(90deg); /* IE 9 */
+				-webkit-transform: rotate(90deg); /* Safari */'
+				transform: rotate(90deg);  
+			}
+
+			.nested {
+				display: none;
+			}
+
+			.active {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="editorToolbar">
+			<ul>
+				<li>EMC Documentum Content Server System Object Reference</li>
+			</ul>
+			<ul>
+				<li>Preface</li>
+				<ul>
+					<li>Preface 1</li>
+					<li>Preface 2</li>
+					<ul>
+						<li>Audience</li>
+						<li>Conversation</li>
+					</ul>
+				</ul>
+			</ul>
+			<ul>
+				<li>Intended audience</li>
+			</ul>
+			<ul>
+				<li>Typographical conventions</li>
+			</ul>
+			<ul>
+				<li>Revision history</li>
+			</ul>
+		</div>
+		
+		<div id="test-bookmarks">
+			<ul id="myUL">
+				<li>
+					<span class="caret caret-down"></span><span>Beverages</span>
+					<ul class="active">
+						<li>Water</li>
+						<li>Coffee</li>
+						<li>
+							<span class="caret">Tea</span>
+							<ul class="nested">
+								<li>Black Tea</li>
+								<li>White Tea</li>
+								<li>
+									<span class="caret">Green Tea</span>
+									<ul class="nested">
+										<li>Sencha</li>
+										<li>Gyokuro</li>
+										<li>Matcha</li>
+										<li>Pi Lo Chun</li>
+									</ul>
+								</li>
+							</ul>
+						</li>  
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div id="bookmarks">
+			
+		</div>
+		<script>
+			require.config({
+				baseUrl: './javascript',
+				waitSeconds: 0
+			});
+			
+			document.addEventListener('DOMContentLoaded', function() {
+				/*var toggler = document.getElementsByClassName("caret");
+				var i;
+
+				for (i = 0; i < toggler.length; i++) {
+					toggler[i].addEventListener("click", function() {
+						var meta = event.target;
+						debugger;
+						this.parentElement.querySelector(".nested").classList.toggle("active");
+						this.classList.toggle("caret-down");
+					});
+				}*/
+				
+				document.addEventListener("click", function() {
+					var meta = event.target;
+					//debugger;
+					
+					
+					if (meta.tagName === 'SPAN' && meta.className.indexOf('caret') !== -1) {
+						meta.parentElement.querySelector(".nested").classList.toggle("active");
+						meta.classList.toggle("caret-down");
+					} else if (meta.tagName === 'LI') {
+						//open bookmark
+					}
+				});
+				
+				
+				require(['bookmarks'], function(bookmarks) {
+					var callMe = function(json) {
+						var bookmarksData = {},
+							parsed = JSON.parse(json);
+						debugger;
+						bookmarksData.configData = parsed;
+						bookmarksData.destination = document.getElementById('bookmarks');
+						bookmarks.init(bookmarksData);
+						//console.log(parsed);
+					};
+					
+					var request = new XMLHttpRequest();
+					request.overrideMimeType('application/json');
+					request.open('GET', 'http://127.0.0.1:8080/bookmarks.json', true);
+					
+					request.onreadystatechange = function() {
+						if (request.readyState === 4 && request.status === 200) {
+							callMe(request.responseText);
+						}
+					};
+					
+					//request.send(null);
+				});
+			});
+		</script>
+	</body>
+</html>
