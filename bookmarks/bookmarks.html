@@ -18,7 +18,7 @@
 				padding: 0;
 			}
 
-			.caret {
+			label>span {
 				cursor: pointer;
 				-webkit-user-select: none; /* Safari 3.1+ */
 				-moz-user-select: none; /* Firefox 2+ */
@@ -26,7 +26,8 @@
 				user-select: none;
 			}
 
-			.caret::before {
+			/*.caret::before {*/
+			label>span::before {
 				content: "\25B6";
 				color: black;
 				display: inline-block;
@@ -39,7 +40,7 @@
 				transform: rotate(90deg);  
 			}
 
-			.nested {
+			li>ul {
 				display: none;
 			}
 
@@ -78,12 +79,12 @@
 		<div id="test-bookmarks">
 			<ul id="myUL">
 				<li>
-					<label for="child1">
-						<input type="checkbox" id="child1">
-						<span class="caret"></span>
+					<label>
+						<input type="checkbox">
+						<span></span>
 					</label>
 					<span>Beverages</span>
-					<ul class="nested">
+					<ul>
 						<li>Water</li>
 						<li>Coffee</li>
 						<li>
@@ -130,13 +131,18 @@
 				
 				document.addEventListener("click", function() {
 					var meta = event.target;
+					var isCaret = meta.parentElement && meta.parentElement.tagName === 'LABEL' && meta.parentElement.children[0].checked;
+					var isBookmark = !isCaret && meta.parentElement && meta.parentElement.tagName === 'LI' && meta.tagName === 'SPAN';
 					debugger;
 					
 					
-					if (meta.tagName === 'SPAN' && meta.className.indexOf('caret') !== -1) {
-						meta.parentElement.querySelector(".nested").classList.toggle("active");
-						meta.classList.toggle("caret-down");
-					} else if (meta.tagName === 'LI') {
+					if (isCaret) {
+						//meta.parentElement.querySelector(".nested").classList.toggle("active");
+						meta.parentElement.nextElementSibling.nextElementSibling.classList.toggle('active');
+						meta.parentElement.children[1].classList.toggle("caret-down");
+						event.stopPropagation();
+						window.event.cancelBubble = true;
+					} else if (isBookmark) {
 						//open bookmark
 					}
 				});

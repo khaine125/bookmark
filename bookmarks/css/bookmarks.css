@@ -6,10 +6,14 @@ li {
 	user-select: none;
 }
 
-li span {
-	cursor: pointer;
+li>span {
+	color: red;
 }
 
 label input {
 	display: none;
+}
+
+label>span {
+	cursor: pointer;
 }
