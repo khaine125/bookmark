@@ -8,6 +8,45 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<script src="./javascript/require.js"></script>
 		<link rel="stylesheet" href="./css/bookmarks.css"/>
+		<style>
+			ul, #myUL {
+				list-style-type: none;
+			}
+
+			#myUL {
+				margin: 0;
+				padding: 0;
+			}
+
+			.caret {
+				cursor: pointer;
+				-webkit-user-select: none; /* Safari 3.1+ */
+				-moz-user-select: none; /* Firefox 2+ */
+				-ms-user-select: none; /* IE 10+ */
+				user-select: none;
+			}
+
+			.caret::before {
+				content: "\25B6";
+				color: black;
+				display: inline-block;
+				margin-right: 6px;
+			}
+
+			.caret-down::before {
+				-ms-transform: rotate(90deg); /* IE 9 */
+				-webkit-transform: rotate(90deg); /* Safari */'
+				transform: rotate(90deg);  
+			}
+
+			.nested {
+				display: none;
+			}
+
+			.active {
+				display: block;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="editorToolbar">
@@ -35,6 +74,38 @@
 				<li>Revision history</li>
 			</ul>
 		</div>
+		
+		<div id="test-bookmarks">
+			<ul id="myUL">
+				<li>
+					<label for="child1">
+						<input type="checkbox" id="child1">
+						<span class="caret"></span>
+					</label>
+					<span>Beverages</span>
+					<ul class="nested">
+						<li>Water</li>
+						<li>Coffee</li>
+						<li>
+							<span class="caret">Tea</span>
+							<ul class="nested">
+								<li>Black Tea</li>
+								<li>White Tea</li>
+								<li>
+									<span class="caret">Green Tea</span>
+									<ul class="nested">
+										<li>Sencha</li>
+										<li>Gyokuro</li>
+										<li>Matcha</li>
+										<li>Pi Lo Chun</li>
+									</ul>
+								</li>
+							</ul>
+						</li>  
+					</ul>
+				</li>
+			</ul>
+		</div>
 		<div id="bookmarks">
 			
 		</div>
@@ -45,6 +116,32 @@
 			});
 			
 			document.addEventListener('DOMContentLoaded', function() {
+				/*var toggler = document.getElementsByClassName("caret");
+				var i;
+
+				for (i = 0; i < toggler.length; i++) {
+					toggler[i].addEventListener("click", function() {
+						var meta = event.target;
+						debugger;
+						this.parentElement.querySelector(".nested").classList.toggle("active");
+						this.classList.toggle("caret-down");
+					});
+				}*/
+				
+				document.addEventListener("click", function() {
+					var meta = event.target;
+					debugger;
+					
+					
+					if (meta.tagName === 'SPAN' && meta.className.indexOf('caret') !== -1) {
+						meta.parentElement.querySelector(".nested").classList.toggle("active");
+						meta.classList.toggle("caret-down");
+					} else if (meta.tagName === 'LI') {
+						//open bookmark
+					}
+				});
+				
+				
 				require(['bookmarks'], function(bookmarks) {
 					var callMe = function(json) {
 						var bookmarksData = {},
@@ -66,7 +163,7 @@
 						}
 					};
 					
-					request.send(null);
+					//request.send(null);
 				});
 			});
 		</script>
