@@ -85,20 +85,44 @@
 					</label>
 					<span>Beverages</span>
 					<ul>
-						<li>Water</li>
-						<li>Coffee</li>
 						<li>
-							<span class="caret">Tea</span>
-							<ul class="nested">
-								<li>Black Tea</li>
-								<li>White Tea</li>
+							<span>Water</span>
+						</li>
+						<li>
+							<span>Coffee</span>
+						</li>
+						<li>
+							<label>
+								<input type="checkbox">
+								<span></span>
+							</label>
+							<span>Tea</span>
+							<ul>
 								<li>
-									<span class="caret">Green Tea</span>
-									<ul class="nested">
-										<li>Sencha</li>
-										<li>Gyokuro</li>
-										<li>Matcha</li>
-										<li>Pi Lo Chun</li>
+									<span>Black Tea</span>
+								</li>
+								<li>
+									<span>White Tea</span>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox">
+										<span></span>
+									</label>
+									<span>Green Tea</span>
+									<ul>
+										<li>
+											<span>Sencha</span>
+										</li>
+										<li>
+											<span>Gyokuro</span>
+										</li>
+										<li>
+											<span>Matcha</span>
+										</li>
+										<li>
+											<span>Pi Lo Chun</span>
+										</li>
 									</ul>
 								</li>
 							</ul>
@@ -116,24 +140,12 @@
 				waitSeconds: 0
 			});
 			
-			document.addEventListener('DOMContentLoaded', function() {
-				/*var toggler = document.getElementsByClassName("caret");
-				var i;
-
-				for (i = 0; i < toggler.length; i++) {
-					toggler[i].addEventListener("click", function() {
-						var meta = event.target;
-						debugger;
-						this.parentElement.querySelector(".nested").classList.toggle("active");
-						this.classList.toggle("caret-down");
-					});
-				}*/
-				
-				document.addEventListener("click", function() {
+			document.addEventListener('DOMContentLoaded', function() {				
+				/*document.getElementById('test-bookmarks').addEventListener("click", function() {
 					var meta = event.target;
 					var isCaret = meta.parentElement && meta.parentElement.tagName === 'LABEL' && meta.parentElement.children[0].checked;
 					var isBookmark = !isCaret && meta.parentElement && meta.parentElement.tagName === 'LI' && meta.tagName === 'SPAN';
-					debugger;
+					//debugger;
 					
 					
 					if (isCaret) {
@@ -145,18 +157,17 @@
 					} else if (isBookmark) {
 						//open bookmark
 					}
-				});
+				});*/
 				
 				
 				require(['bookmarks'], function(bookmarks) {
 					var callMe = function(json) {
 						var bookmarksData = {},
 							parsed = JSON.parse(json);
-						debugger;
+						//debugger;
 						bookmarksData.configData = parsed;
 						bookmarksData.destination = document.getElementById('bookmarks');
 						bookmarks.init(bookmarksData);
-						//console.log(parsed);
 					};
 					
 					var request = new XMLHttpRequest();
@@ -169,7 +180,7 @@
 						}
 					};
 					
-					//request.send(null);
+					request.send(null);
 				});
 			});
 		</script>
