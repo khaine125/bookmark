@@ -1,117 +1,96 @@
 define(function() {
 	return {
+		itemCounter: 0,
+
 		init: function(bookmarksData) {
 			var configData = bookmarksData.configData,
 				rootNode = configData.root,
 				destination = bookmarksData.destination,
-				rootChildren;
-			
+				fragment = document.createDocumentFragment(),
+				ul = document.createElement('ul'),
+				rootChildren, structure;
+
 			destination.addEventListener('click', this.clickHandler);
 			this.allBookmarks = configData.bookmarks;
-			rootChildren = this.allBookmarks[rootNode].childBookmarks
-			
-			var fragment = document.createDocumentFragment();
-			var structureUl = document.createElement('ul');
-			//var mega = this.constructBookmarks(rootChildren, structureUl);
-			
-			
-			
-			var structure = this.createBookmarkNode(rootNode);
-			fragment.appendChild(structure);
-			
-			
+			rootChildren = this.allBookmarks[rootNode].childBookmarks;
+			structure = this.createBookmarkNode(rootNode);
+
+			ul.appendChild(structure);
+
+			fragment.appendChild(ul);
+
+			destination.className = 'tree';
 			destination.appendChild(fragment);
-			
-			//this.constructBookmarks(bookmarksArray);
 		},
-		
-		constructBookmarks: function(children, childUl) {
+
+		constructBookmarks: function(children) {
 			var self = this;
-			
+			var childUl = document.createElement('ul');
+
 			children.map(function(bookmark) {
 				var containsChildren = self.allBookmarks[bookmark] && self.allBookmarks[bookmark].childBookmarks !== undefined;
-				
+
 				if (containsChildren) {
-					childUl = self.createBookmarkNode(bookmark);
+					childUl.appendChild(self.createBookmarkNode(bookmark));
 				} else {
 					var li = document.createElement('li');
 					var span = document.createElement('span');
+					span.className = 'tree_label';
 					span.innerHTML = bookmark;
+					span.setAttribute('type', 'bookmark');
 					li.appendChild(span);
-					
+
 					childUl.appendChild(li);
 				}
 			});
-			
+
 			return childUl;
 		},
-		
+
 		createBookmarkNode: function(node) {
-			var bookmarksArray = this.allBookmarks[node].childBookmarks;
-				
-			var ul = document.createElement('ul');
-			var childUl = document.createElement('ul');
-			var li = document.createElement('li');
-			var label = document.createElement('label');
-			
-			var input = document.createElement('input');
-			input.type = 'checkbox';
-			
-			var span = document.createElement('span');
-			var spanTitle = document.createElement('span');
-			spanTitle.innerHTML = node;
-			
-			
-			
-			
-			label.appendChild(input);
+			var bookmarksArray = this.allBookmarks[node].childBookmarks,
+				currentItemId = 'item' + (this.itemCounter++),
+				childUl = document.createElement('ul'),
+				li = document.createElement('li'),
+				label = document.createElement('label'),
+				input = document.createElement('input'),
+				span = document.createElement('span');
+
+			label.setAttribute('for', currentItemId);
+			label.className = 'tree_label';
+
+			span.innerHTML = node;
+			span.setAttribute('type', 'bookmark');
 			label.appendChild(span);
-			
+
+			input.type = 'checkbox';
+			input.id = currentItemId;
+
+			li.appendChild(input);
 			li.appendChild(label);
-			li.appendChild(spanTitle);
-			
+
 			if (bookmarksArray) {
-				childUl = this.constructBookmarks(bookmarksArray, childUl);
+				childUl = this.constructBookmarks(bookmarksArray);
 			}
-			
+
 			li.appendChild(childUl);
-			
-			ul.appendChild(li);
-			
-			
-			
-			return ul;
+
+			return li;
 		},
-		
-		
-		/*
-		<ul id="myUL">
-			<li>
-				<label>
-					<input type="checkbox">
-					<span></span>
-				</label>
-				<span>Beverages</span>
-				<ul>
-					<li>
-						<span>Water</span>
-					</li>
-		*/
-		
-		bla: function() {
-			
-		},
-		
+
 		clickHandler: function() {
 			var meta = event.target;
-			var isCaret = meta.parentElement && meta.parentElement.tagName === 'LABEL' && meta.parentElement.children[0].checked;
-			var isBookmark = !isCaret && meta.parentElement && meta.parentElement.tagName === 'LI' && meta.tagName === 'SPAN';
-			
+			var isCaret = meta.getAttribute('type') === 'caret';
+			var isBookmark = !isCaret && meta.getAttribute('type') === 'bookmark';
+
 			if (isCaret) {
+				console.log('caret');
 				//meta.parentElement.querySelector(".nested").classList.toggle("active");
-				meta.parentElement.nextElementSibling.nextElementSibling.classList.toggle('active');
-				meta.parentElement.children[1].classList.toggle("caret-down");
+				//meta.parentElement.nextElementSibling.nextElementSibling.classList.toggle('active');
+				//meta.parentElement.children[1].classList.toggle("caret-down");
 			} else if (isBookmark) {
+				console.log('bookmark');
+				event.preventDefault();
 				//open bookmark
 			}
 		}
