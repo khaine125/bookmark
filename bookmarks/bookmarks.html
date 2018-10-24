@@ -8,125 +8,35 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<script src="./javascript/require.js"></script>
 		<link rel="stylesheet" href="./css/bookmarks.css"/>
-		<style>
-			ul, #myUL {
-				list-style-type: none;
-			}
-
-			#myUL {
-				margin: 0;
-				padding: 0;
-			}
-
-			label>span {
-				cursor: pointer;
-				-webkit-user-select: none; /* Safari 3.1+ */
-				-moz-user-select: none; /* Firefox 2+ */
-				-ms-user-select: none; /* IE 10+ */
-				user-select: none;
-			}
-
-			/*.caret::before {*/
-			label>span::before {
-				content: "\25B6";
-				color: black;
-				display: inline-block;
-				margin-right: 6px;
-			}
-
-			.caret-down::before {
-				-ms-transform: rotate(90deg); /* IE 9 */
-				-webkit-transform: rotate(90deg); /* Safari */'
-				transform: rotate(90deg);  
-			}
-
-			li>ul {
-				display: none;
-			}
-
-			.active {
-				display: block;
-			}
-		</style>
 	</head>
 	<body>
-		<div id="editorToolbar">
+		<div id="editorToolbar" class="tree">
 			<ul>
-				<li>EMC Documentum Content Server System Object Reference</li>
-			</ul>
-			<ul>
-				<li>Preface</li>
-				<ul>
-					<li>Preface 1</li>
-					<li>Preface 2</li>
-					<ul>
-						<li>Audience</li>
-						<li>Conversation</li>
-					</ul>
-				</ul>
-			</ul>
-			<ul>
-				<li>Intended audience</li>
-			</ul>
-			<ul>
-				<li>Typographical conventions</li>
-			</ul>
-			<ul>
-				<li>Revision history</li>
-			</ul>
-		</div>
-		
-		<div id="test-bookmarks">
-			<ul id="myUL">
 				<li>
-					<label>
-						<input type="checkbox">
-						<span></span>
-					</label>
-					<span>Beverages</span>
+					<input type="checkbox" id="c5" />
+					<label class="tree_label" for="c5">Level 0</label>
 					<ul>
 						<li>
-							<span>Water</span>
-						</li>
-						<li>
-							<span>Coffee</span>
-						</li>
-						<li>
-							<label>
-								<input type="checkbox">
-								<span></span>
-							</label>
-							<span>Tea</span>
+							<input type="checkbox" id="c6" />
+							<label for="c6" class="tree_label">Level 1</label>
 							<ul>
+								<li><span class="tree_label">Level 2</span></li>
+							</ul>
+						</li>
+						<li>
+							<input type="checkbox" id="c7" />
+							<label for="c7" class="tree_label">Level 1</label>
+							<ul>
+								<li><span class="tree_label">Level 2</span></li>
 								<li>
-									<span>Black Tea</span>
-								</li>
-								<li>
-									<span>White Tea</span>
-								</li>
-								<li>
-									<label>
-										<input type="checkbox">
-										<span></span>
-									</label>
-									<span>Green Tea</span>
+									<input type="checkbox" id="c8" />
+									<label for="c8" class="tree_label">Level 2</label>
 									<ul>
-										<li>
-											<span>Sencha</span>
-										</li>
-										<li>
-											<span>Gyokuro</span>
-										</li>
-										<li>
-											<span>Matcha</span>
-										</li>
-										<li>
-											<span>Pi Lo Chun</span>
-										</li>
+										<li><span class="tree_label">Level 3</span></li>
 									</ul>
 								</li>
 							</ul>
-						</li>  
+						</li>
 					</ul>
 				</li>
 			</ul>
