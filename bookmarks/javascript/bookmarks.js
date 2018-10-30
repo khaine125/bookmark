@@ -1,6 +1,9 @@
 define(function() {
+	//var eventEmitter = helpers.eventEmitter;
+	
 	return {
 		itemCounter: 0,
+		allBookmarks: {},
 
 		init: function(bookmarksData) {
 			var configData = bookmarksData.configData,
@@ -8,12 +11,13 @@ define(function() {
 				destination = bookmarksData.destination,
 				fragment = document.createDocumentFragment(),
 				ul = document.createElement('ul'),
-				rootChildren, structure;
+				structure;
+				
+			//eventEmitter(this);
 
-			destination.addEventListener('click', this.clickHandler);
+			destination.addEventListener('click', this._clickHandler);
 			this.allBookmarks = configData.bookmarks;
-			rootChildren = this.allBookmarks[rootNode].childBookmarks;
-			structure = this.createBookmarkNode(rootNode);
+			structure = this._createBookmarkNode(rootNode);
 
 			ul.appendChild(structure);
 
@@ -23,22 +27,20 @@ define(function() {
 			destination.appendChild(fragment);
 		},
 
-		constructBookmarks: function(children) {
-			var self = this;
-			var childUl = document.createElement('ul');
+		_constructBookmarks: function(children) {
+			var self = this,
+				childUl = document.createElement('ul');
 
-			children.map(function(bookmark) {
-				var containsChildren = self.allBookmarks[bookmark] && self.allBookmarks[bookmark].childBookmarks !== undefined;
+			children.map(function(bookmarkId) {
+				var li,
+					currentBookmark = self.allBookmarks[bookmarkId],
+					containsChildren = currentBookmark && currentBookmark.childBookmarks.length > 0;
 
 				if (containsChildren) {
-					childUl.appendChild(self.createBookmarkNode(bookmark));
+					childUl.appendChild(self._createBookmarkNode(bookmarkId));
 				} else {
-					var li = document.createElement('li');
-					var span = document.createElement('span');
-					span.className = 'tree_label';
-					span.innerHTML = bookmark;
-					span.setAttribute('type', 'bookmark');
-					li.appendChild(span);
+					li = document.createElement('li');
+					li.appendChild(self._createSpan('tree_label', currentBookmark.title, bookmarkId));
 
 					childUl.appendChild(li);
 				}
@@ -47,21 +49,29 @@ define(function() {
 			return childUl;
 		},
 
-		createBookmarkNode: function(node) {
-			var bookmarksArray = this.allBookmarks[node].childBookmarks,
+		_createSpan: function(className, title, bookmarkId) {
+			var span = document.createElement('span');
+
+			span.className = 'tree_label';
+			span.innerHTML = title;
+			span.setAttribute('type', 'bookmark');
+			span.setAttribute('bookmarkId', bookmarkId);
+
+			return span;
+		},
+
+		_createBookmarkNode: function(bookmarkId) {
+			var bookmark = this.allBookmarks[bookmarkId],
+				bookmarksArray = bookmark.childBookmarks,
 				currentItemId = 'item' + (this.itemCounter++),
 				childUl = document.createElement('ul'),
 				li = document.createElement('li'),
 				label = document.createElement('label'),
-				input = document.createElement('input'),
-				span = document.createElement('span');
+				input = document.createElement('input');
 
 			label.setAttribute('for', currentItemId);
 			label.className = 'tree_label';
-
-			span.innerHTML = node;
-			span.setAttribute('type', 'bookmark');
-			label.appendChild(span);
+			label.appendChild(this._createSpan('', bookmark.title, bookmarkId));
 
 			input.type = 'checkbox';
 			input.id = currentItemId;
@@ -70,7 +80,7 @@ define(function() {
 			li.appendChild(label);
 
 			if (bookmarksArray) {
-				childUl = this.constructBookmarks(bookmarksArray);
+				childUl = this._constructBookmarks(bookmarksArray);
 			}
 
 			li.appendChild(childUl);
@@ -78,20 +88,16 @@ define(function() {
 			return li;
 		},
 
-		clickHandler: function() {
-			var meta = event.target;
-			var isCaret = meta.getAttribute('type') === 'caret';
-			var isBookmark = !isCaret && meta.getAttribute('type') === 'bookmark';
+		_clickHandler: function() {
+			var bookmarkId, item,
+				selectedElement = event.target,
+				isBookmark = selectedElement.getAttribute('type') === 'bookmark';
 
-			if (isCaret) {
-				console.log('caret');
-				//meta.parentElement.querySelector(".nested").classList.toggle("active");
-				//meta.parentElement.nextElementSibling.nextElementSibling.classList.toggle('active');
-				//meta.parentElement.children[1].classList.toggle("caret-down");
-			} else if (isBookmark) {
-				console.log('bookmark');
+			if (isBookmark) {
+				bookmarkId = selectedElement.getAttribute('bookmarkid');
+				item = this.allBookmarks[bookmarkId].event;
+				//this.emit('select-bookmark', item, this);
 				event.preventDefault();
-				//open bookmark
 			}
 		}
 	};
